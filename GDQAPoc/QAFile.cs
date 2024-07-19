@@ -1,4 +1,6 @@
-﻿namespace GDQAPoc;
+﻿using CommunityToolkit.HighPerformance;
+
+namespace GDQAPoc;
 public sealed class QAFile(string path)
 {
 	private static readonly int MaxIssueLength = "bgp, unrd, mem, ovdeco, sync, ic 1 2 3, nci 1 2 3, fc 1 2 3".Length;
@@ -11,14 +13,26 @@ public sealed class QAFile(string path)
 		var stream = File.Open(path, new FileStreamOptions() { Options = FileOptions.SequentialScan });
 		using var reader = new StreamReader(stream);
 
-		while (true)
+		//find id
+		if (await reader.SkipUntil(level.ToString()) is false)
+			return null;
+
+		await reader.SkipUntil(" | ");
+
+		var chars = await reader.ReadUntil('|').SelectMany(segm => segm.ToAsyncEnumerable()).ToArrayAsync();
+		if (chars[0] is '-')
+			return [];
+
+		return SyncRest(); //hack
+
+		Issue[] SyncRest()
 		{
-			if (await reader.SkipUntil(level.ToString()) is false)
-				return null;
+			var ret = new Issue[chars.Count(',') + 1];
+			var count = 0;
+			foreach (var issueString in chars.Tokenize(','))
+				ret[count++] = Issue.Parse(issueString.Trim(' '));
 
-			await reader.SkipUntil('|');
-
-
+			return ret;
 		}
 	}
 }
