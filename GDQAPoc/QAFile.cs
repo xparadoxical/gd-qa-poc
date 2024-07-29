@@ -19,7 +19,7 @@ public sealed class QAFile(string path)
 
 		await reader.SkipUntil(" | ");
 
-		var chars = await reader.ReadUntil('|').SelectMany(segm => segm.ToAsyncEnumerable()).ToArrayAsync();
+		var chars = await reader.ReadUntil('|').SelectMany(segm => segm.ToArray().ToAsyncEnumerable()).ToArrayAsync();
 		if (chars[0] is '-')
 			return [];
 
@@ -28,9 +28,9 @@ public sealed class QAFile(string path)
 		Issue[] SyncRest()
 		{
 			var ret = new Issue[chars.Count(',') + 1];
-			var count = 0;
+			var i = 0;
 			foreach (var issueString in chars.Tokenize(','))
-				ret[count++] = Issue.Parse(issueString.Trim(' '));
+				ret[i++] = Issue.Parse(issueString.Trim(' '));
 
 			return ret;
 		}
