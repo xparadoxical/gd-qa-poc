@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 namespace GDQAPoc;
 public partial class Form1ViewModel : ObservableObject
 {
-	[ObservableProperty]
+	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveNoIssues) + "Command", nameof(SaveWithIssues) + "Command")]
 	private string _id = "";
 
 	[ObservableProperty]
@@ -53,41 +53,90 @@ public partial class Form1ViewModel : ObservableObject
 	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
 	private bool _insaneCoin3;
 
+	[ObservableProperty]
+	private bool _exists;
 
+	private readonly QAFile _file = new(Environment.GetEnvironmentVariable("USERPROFILE") + @"\Documents\gd qa.md");
 
-	partial void OnIdChanged(string value)
+	//async partial void OnIdChanged(string value)
+	//{
+	//	//verify id, maybe load level data on textbox unfocus
+	//	if (uint.TryParse(value, out var id) is false)
+	//		return;
+
+	//	if (await _file.TryRead(id) is null)
+	//		return;
+	//}
+
+	public async Task Save(bool all)
 	{
-		//verify id, maybe load level data on textbox unfocus
-	}
+		var id = uint.Parse(Id);
+		var exists = await _file.Exists(id);
 
-	public async Task Save()
-	{
-
-	}
-
-	[RelayCommand]
-	public async Task SaveNoIssues()
-	{
-		if (AnyIssuesFilled())
+		if (exists)
 		{
-			if (MessageBox.Show("Do you want to ignore your written issues?",
-				"Confirm ignore",
-				MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
+			if (MessageBox.Show($"Overwrite {id}?",
+					"Confirm overwrite",
+					MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
 				is not DialogResult.OK)
 				return;
 		}
 
+		var entry = new QAEntry(id, Remarks,
+			new Issue?[]
+			{
+				BadGameplay ? new Issue.BadGameplay() : null,
+				Unreadable ? new Issue.Unreadable() : null,
+				Overdecorated ? new Issue.Overdecorated() : null,
+				BadMusicSync ? new Issue.BadSync() : null,
+				Memory ? new Issue.Memory() : null,
+				NoCoinIndication1 || NoCoinIndication2 || NoCoinIndication3
+					? new Issue.NoCoinIndication(NoCoinIndication1, NoCoinIndication2, NoCoinIndication3) : null,
+				FreeCoin1 || FreeCoin2 || FreeCoin3
+					? new Issue.FreeCoins(FreeCoin1, FreeCoin2, FreeCoin3) : null,
+				InsaneCoin1 || InsaneCoin2 || InsaneCoin3
+					? new Issue.InsaneCoins(InsaneCoin1, InsaneCoin2, InsaneCoin3) : null
+			}.WhereNotNull().ToArray(),
+			new CoinGuides(CoinGuide1, CoinGuide2, CoinGuide3));
 
+		//if (exists)
+		//	await _file.Overwrite(id, entry);
+		//else
+		await _file.Append(id, entry);
 	}
 
-	public bool AnyIssuesFilled()
+	private bool ValidateId() => uint.TryParse(Id, out _);
+
+	[RelayCommand(CanExecute = nameof(ValidateId))]
+	public async Task SaveNoIssues()
 	{
-		return true;
+		if (CanSaveWithIssues())
+		{
+			if (MessageBox.Show("Do you want to ignore your written issues?",
+					"Confirm ignore",
+					MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
+				is not DialogResult.OK)
+				return;
+		}
+
+		await Save(false);
 	}
 
-	[RelayCommand(CanExecute = nameof(AnyIssuesFilled))]
-	public async Task SaveWithIssues()
+	public bool CanSaveWithIssues()
 	{
-
+		return ValidateId() &&
+			//remarks are ignored
+			(CoinGuide1.Any() || CoinGuide2.Any() || CoinGuide3.Any()
+			|| BadGameplay
+			|| Unreadable
+			|| Overdecorated
+			|| BadMusicSync
+			|| Memory
+			|| NoCoinIndication1 || NoCoinIndication2 || NoCoinIndication3
+			|| FreeCoin1 || FreeCoin2 || FreeCoin3
+			|| InsaneCoin1 || InsaneCoin2 || InsaneCoin3);
 	}
+
+	[RelayCommand(CanExecute = nameof(CanSaveWithIssues))]
+	public async Task SaveWithIssues() => await Save(true);
 }

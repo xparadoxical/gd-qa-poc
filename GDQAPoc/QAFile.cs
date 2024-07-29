@@ -1,38 +1,65 @@
 ﻿using CommunityToolkit.HighPerformance;
 
 namespace GDQAPoc;
+
 public sealed class QAFile(string path)
 {
-	private static readonly int MaxIssueLength = "bgp, unrd, mem, ovdeco, sync, ic 1 2 3, nci 1 2 3, fc 1 2 3".Length;
-
-	public async Task<Issue[]?> TryRead(uint level)
+	public async Task<QAEntry?> TryRead(uint level)
 	{
-		var handle = File.OpenHandle(path, options: FileOptions.SequentialScan);
-		var buffer = new byte[4096];
-
-		var stream = File.Open(path, new FileStreamOptions() { Options = FileOptions.SequentialScan });
+		var stream = File.Open(path, new FileStreamOptions() { Options = FileOptions.SequentialScan | FileOptions.Asynchronous });
 		using var reader = new StreamReader(stream);
 
 		//find id
-		if (await reader.SkipUntil(level.ToString()) is false)
+		if (await reader.SkipUntil($"| {level} |") is false)
 			return null;
 
-		await reader.SkipUntil(" | ");
+		var data = await reader.ReadUntil('\n').SelectMany(segm => segm.ToArray().ToAsyncEnumerable()).ToArrayAsync();
+		return SyncRest(data); //hack
 
-		var chars = await reader.ReadUntil('|').SelectMany(segm => segm.ToArray().ToAsyncEnumerable()).ToArrayAsync();
-		if (chars[0] is '-')
-			return [];
-
-		return SyncRest(); //hack
-
-		Issue[] SyncRest()
+		QAEntry SyncRest(ReadOnlySpan<char> data)
 		{
-			var ret = new Issue[chars.Count(',') + 1];
-			var i = 0;
-			foreach (var issueString in chars.Tokenize(','))
-				ret[i++] = Issue.Parse(issueString.Trim(' '));
+			data = ReadIssues(data, out var issues);
+			var remarks = new string(data.ConsumeUntil('|'));
+			var coins = CoinGuides.Parse(data.ConsumeUntil('|'));
+			return new(level, remarks, issues, coins);
 
-			return ret;
+			static ReadOnlySpan<char> ReadIssues(ReadOnlySpan<char> data, out Issue[] issues)
+			{
+				var separator = data.IndexOf('|');
+				var read = data[..separator];
+				var remaining = data[(separator + 1)..];
+
+				if (read.Contains('-'))
+				{
+					issues = [];
+					return remaining;
+				}
+
+				issues = new Issue[System.MemoryExtensions.Count(data, ',') + 1];
+
+				var i = 0;
+				foreach (var issueString in data.Tokenize(','))
+					issues[i++] = Issue.Parse(issueString.Trim(' '));
+
+				return remaining;
+			}
 		}
+	}
+
+	public async Task<bool> Exists(uint level)
+	{
+		var stream = File.Open(path, new FileStreamOptions() { Options = FileOptions.SequentialScan | FileOptions.Asynchronous });
+		using var reader = new StreamReader(stream);
+
+		return await reader.SkipUntil($"| {level} |");
+	}
+
+	public async Task Append(uint level, QAEntry entry)
+	{
+		var stream = File.Open(path, new FileStreamOptions() { Access = FileAccess.Write, Options = FileOptions.WriteThrough | FileOptions.Asynchronous });
+		using var writer = new StreamWriter(stream);
+		stream.Seek(0, SeekOrigin.End);
+
+		await writer.WriteAsync(entry.ToString());
 	}
 }
