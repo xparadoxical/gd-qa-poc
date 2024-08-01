@@ -99,10 +99,10 @@ public partial class Form1ViewModel : ObservableObject
 			}.WhereNotNull().ToArray(),
 			new CoinGuides(CoinGuide1, CoinGuide2, CoinGuide3));
 
-		//if (exists)
-		//	await _file.Overwrite(id, entry);
-		//else
-		await _file.Append(id, entry);
+		if (exists)
+			await _file.Overwrite(id, entry);
+		else
+			await _file.Append(id, entry);
 	}
 
 	private bool ValidateId() => uint.TryParse(Id, out _);
