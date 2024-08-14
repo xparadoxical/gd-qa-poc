@@ -2,6 +2,40 @@
 
 public sealed class IssueCollection// : IEnumerable<Issue>
 {
+	public IssueCollection() { }
+
+	public IssueCollection(Issue[] issues)
+	{
+		if (issues.Any(i => i is Issue.BadGameplay))
+			BadGameplay = true;
+		if (issues.Any(i => i is Issue.Unreadable))
+			Unreadable = true;
+		if (issues.Any(i => i is Issue.Overdecorated))
+			Overdecorated = true;
+		if (issues.Any(i => i is Issue.BadSync))
+			BadMusicSync = true;
+		if (issues.Any(i => i is Issue.Memory))
+			Memory = true;
+		if (issues.FirstOfTypeOrDefault<Issue.NoCoinIndication>() is { } nci)
+		{
+			NoCoin1Indication = nci.C1;
+			NoCoin2Indication = nci.C2;
+			NoCoin3Indication = nci.C3;
+		}
+		if (issues.FirstOfTypeOrDefault<Issue.FreeCoins>() is { } fc)
+		{
+			FreeCoin1 = fc.C1;
+			FreeCoin2 = fc.C2;
+			FreeCoin3 = fc.C3;
+		}
+		if (issues.FirstOfTypeOrDefault<Issue.InsaneCoins>() is { } ic)
+		{
+			InsaneCoin1 = ic.C1;
+			InsaneCoin2 = ic.C2;
+			InsaneCoin3 = ic.C3;
+		}
+	}
+
 	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
 	public bool BadGameplay { get; set; }
 
