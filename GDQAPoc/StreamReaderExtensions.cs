@@ -27,10 +27,13 @@ public static class StreamReaderExtensions
 		}
 	}
 
-	public static IAsyncEnumerable<ArraySegment<char>> ReadUntil(this StreamReader reader, char c)
+	public static IAsyncEnumerable<char> ReadUntil(this StreamReader reader, char c)
 		=> ReadUntil(reader, c.ToString());
 
-	public static async IAsyncEnumerable<ArraySegment<char>> ReadUntil(this StreamReader reader, string s)
+	public static IAsyncEnumerable<char> ReadUntil(this StreamReader reader, string s)
+		=> ReadUntilCore(reader, s).SelectMany(segm => segm.ToArray().ToAsyncEnumerable());
+
+	private static async IAsyncEnumerable<ArraySegment<char>> ReadUntilCore(StreamReader reader, string s)
 	{
 		var arr = new char[4096];
 		var memory = arr.AsMemory();

@@ -15,8 +15,8 @@ public sealed class QAFile(string path)
 		if (await reader.SkipUntil($"| {level} |") is false)
 			return null;
 
-		var data = await reader.ReadUntil('\n').SelectMany(segm => segm.ToArray().ToAsyncEnumerable()).ToArrayAsync();
-		return SyncRest(data); //hack
+		var data = await reader.ReadUntil('\n').ToArrayAsync();
+		return SyncRest(data); //hack c# 13
 
 		QAEntry SyncRest(ReadOnlySpan<char> data)
 		{
