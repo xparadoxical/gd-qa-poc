@@ -93,6 +93,7 @@ partial class Form1
 		// 
 		// textBox2
 		// 
+		textBox2.DataBindings.Add(new Binding("Text", form1ViewModelBindingSource, "CoinGuide1", true));
 		textBox2.Location = new Point(3, 3);
 		textBox2.Name = "textBox2";
 		textBox2.PlaceholderText = "Coin 1 guide";
@@ -101,6 +102,7 @@ partial class Form1
 		// 
 		// textBox3
 		// 
+		textBox3.DataBindings.Add(new Binding("Text", form1ViewModelBindingSource, "CoinGuide2", true));
 		textBox3.Location = new Point(3, 36);
 		textBox3.Name = "textBox3";
 		textBox3.PlaceholderText = "Coin 2 guide";
@@ -109,6 +111,7 @@ partial class Form1
 		// 
 		// textBox4
 		// 
+		textBox4.DataBindings.Add(new Binding("Text", form1ViewModelBindingSource, "CoinGuide3", true));
 		textBox4.Location = new Point(3, 69);
 		textBox4.Name = "textBox4";
 		textBox4.PlaceholderText = "Coin 3 guide";
@@ -117,6 +120,7 @@ partial class Form1
 		// 
 		// textBox5
 		// 
+		textBox5.DataBindings.Add(new Binding("Text", form1ViewModelBindingSource, "Remarks", true));
 		textBox5.Location = new Point(6, 36);
 		textBox5.Name = "textBox5";
 		textBox5.PlaceholderText = "Remarks";
@@ -138,6 +142,7 @@ partial class Form1
 		// checkBox14
 		// 
 		checkBox14.AutoSize = true;
+		checkBox14.DataBindings.Add(new Binding("Checked", form1ViewModelBindingSource, "Issues.Memory", true));
 		checkBox14.Location = new Point(3, 123);
 		checkBox14.Name = "checkBox14";
 		checkBox14.Size = new Size(86, 24);
@@ -148,6 +153,7 @@ partial class Form1
 		// checkBox13
 		// 
 		checkBox13.AutoSize = true;
+		checkBox13.DataBindings.Add(new Binding("Checked", form1ViewModelBindingSource, "Issues.BadMusicSync", true));
 		checkBox13.Location = new Point(3, 93);
 		checkBox13.Name = "checkBox13";
 		checkBox13.Size = new Size(131, 24);
@@ -158,6 +164,7 @@ partial class Form1
 		// checkBox12
 		// 
 		checkBox12.AutoSize = true;
+		checkBox12.DataBindings.Add(new Binding("Checked", form1ViewModelBindingSource, "Issues.Overdecorated", true));
 		checkBox12.Location = new Point(3, 63);
 		checkBox12.Name = "checkBox12";
 		checkBox12.Size = new Size(130, 24);
@@ -168,6 +175,7 @@ partial class Form1
 		// checkBox11
 		// 
 		checkBox11.AutoSize = true;
+		checkBox11.DataBindings.Add(new Binding("Checked", form1ViewModelBindingSource, "Issues.Unreadable", true));
 		checkBox11.Location = new Point(3, 33);
 		checkBox11.Name = "checkBox11";
 		checkBox11.Size = new Size(108, 24);
@@ -178,6 +186,7 @@ partial class Form1
 		// checkBox10
 		// 
 		checkBox10.AutoSize = true;
+		checkBox10.DataBindings.Add(new Binding("Checked", form1ViewModelBindingSource, "Issues.BadGameplay", true));
 		checkBox10.Location = new Point(3, 3);
 		checkBox10.Name = "checkBox10";
 		checkBox10.Size = new Size(127, 24);
@@ -241,6 +250,7 @@ partial class Form1
 		// checkBox23
 		// 
 		checkBox23.AutoSize = true;
+		checkBox23.DataBindings.Add(new Binding("Checked", form1ViewModelBindingSource, "Issues.InsaneCoin3", true));
 		checkBox23.Location = new Point(98, 130);
 		checkBox23.Name = "checkBox23";
 		checkBox23.Size = new Size(39, 24);
@@ -251,6 +261,7 @@ partial class Form1
 		// checkBox18
 		// 
 		checkBox18.AutoSize = true;
+		checkBox18.DataBindings.Add(new Binding("Checked", form1ViewModelBindingSource, "Issues.FreeCoin3", true));
 		checkBox18.Location = new Point(98, 80);
 		checkBox18.Name = "checkBox18";
 		checkBox18.Size = new Size(39, 24);
@@ -270,6 +281,7 @@ partial class Form1
 		// checkBox22
 		// 
 		checkBox22.AutoSize = true;
+		checkBox22.DataBindings.Add(new Binding("Checked", form1ViewModelBindingSource, "Issues.InsaneCoin1", true));
 		checkBox22.Location = new Point(8, 130);
 		checkBox22.Name = "checkBox22";
 		checkBox22.Size = new Size(39, 24);
@@ -289,6 +301,7 @@ partial class Form1
 		// checkBox21
 		// 
 		checkBox21.AutoSize = true;
+		checkBox21.DataBindings.Add(new Binding("Checked", form1ViewModelBindingSource, "Issues.InsaneCoin2", true));
 		checkBox21.Location = new Point(53, 130);
 		checkBox21.Name = "checkBox21";
 		checkBox21.Size = new Size(39, 24);
@@ -299,6 +312,7 @@ partial class Form1
 		// checkBox19
 		// 
 		checkBox19.AutoSize = true;
+		checkBox19.DataBindings.Add(new Binding("Checked", form1ViewModelBindingSource, "Issues.FreeCoin1", true));
 		checkBox19.Location = new Point(8, 80);
 		checkBox19.Name = "checkBox19";
 		checkBox19.Size = new Size(39, 24);
@@ -309,6 +323,7 @@ partial class Form1
 		// checkBox20
 		// 
 		checkBox20.AutoSize = true;
+		checkBox20.DataBindings.Add(new Binding("Checked", form1ViewModelBindingSource, "Issues.FreeCoin2", true));
 		checkBox20.Location = new Point(53, 80);
 		checkBox20.Name = "checkBox20";
 		checkBox20.Size = new Size(39, 24);
@@ -319,6 +334,7 @@ partial class Form1
 		// checkBox17
 		// 
 		checkBox17.AutoSize = true;
+		checkBox17.DataBindings.Add(new Binding("Checked", form1ViewModelBindingSource, "Issues.NoCoin3Indication", true));
 		checkBox17.Location = new Point(98, 30);
 		checkBox17.Name = "checkBox17";
 		checkBox17.Size = new Size(39, 24);
@@ -338,6 +354,7 @@ partial class Form1
 		// checkBox16
 		// 
 		checkBox16.AutoSize = true;
+		checkBox16.DataBindings.Add(new Binding("Checked", form1ViewModelBindingSource, "Issues.NoCoin1Indication", true));
 		checkBox16.Location = new Point(8, 30);
 		checkBox16.Name = "checkBox16";
 		checkBox16.Size = new Size(39, 24);
@@ -348,6 +365,7 @@ partial class Form1
 		// checkBox15
 		// 
 		checkBox15.AutoSize = true;
+		checkBox15.DataBindings.Add(new Binding("Checked", form1ViewModelBindingSource, "Issues.NoCoin2Indication", true));
 		checkBox15.Location = new Point(53, 30);
 		checkBox15.Name = "checkBox15";
 		checkBox15.Size = new Size(39, 24);

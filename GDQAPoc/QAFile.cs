@@ -23,7 +23,7 @@ public sealed class QAFile(string path)
 			data = ReadIssues(data, out var issues);
 			var remarks = new string(data.ConsumeUntil('|'));
 			var coins = CoinGuides.Parse(data.ConsumeUntil('|'));
-			return new(level, remarks, issues, coins);
+			return new(level, remarks, new(), coins); //TODO parse
 
 			static ReadOnlySpan<char> ReadIssues(ReadOnlySpan<char> data, out Issue[] issues)
 			{

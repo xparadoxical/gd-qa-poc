@@ -10,48 +10,14 @@ public partial class Form1ViewModel : ObservableObject
 	[ObservableProperty]
 	private string _remarks = "";
 
+	public IssueCollection Issues { get; set; } = new();
+
 	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
 	private string _coinGuide1 = "";
 	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
 	private string _coinGuide2 = "";
 	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
 	private string _coinGuide3 = "";
-
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	private bool _badGameplay;
-
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	private bool _unreadable;
-
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	private bool _overdecorated;
-
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	private bool _badMusicSync;
-
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	private bool _memory;
-
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	private bool _noCoinIndication1;
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	private bool _noCoinIndication2;
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	private bool _noCoinIndication3;
-
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	private bool _freeCoin1;
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	private bool _freeCoin2;
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	private bool _freeCoin3;
-
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	private bool _insaneCoin1;
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	private bool _insaneCoin2;
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	private bool _insaneCoin3;
 
 	[ObservableProperty]
 	private bool _exists;
@@ -82,22 +48,7 @@ public partial class Form1ViewModel : ObservableObject
 				return;
 		}
 
-		var entry = new QAEntry(id, Remarks,
-			new Issue?[]
-			{
-				BadGameplay ? new Issue.BadGameplay() : null,
-				Unreadable ? new Issue.Unreadable() : null,
-				Overdecorated ? new Issue.Overdecorated() : null,
-				BadMusicSync ? new Issue.BadSync() : null,
-				Memory ? new Issue.Memory() : null,
-				NoCoinIndication1 || NoCoinIndication2 || NoCoinIndication3
-					? new Issue.NoCoinIndication(NoCoinIndication1, NoCoinIndication2, NoCoinIndication3) : null,
-				FreeCoin1 || FreeCoin2 || FreeCoin3
-					? new Issue.FreeCoins(FreeCoin1, FreeCoin2, FreeCoin3) : null,
-				InsaneCoin1 || InsaneCoin2 || InsaneCoin3
-					? new Issue.InsaneCoins(InsaneCoin1, InsaneCoin2, InsaneCoin3) : null
-			}.WhereNotNull().ToArray(),
-			new CoinGuides(CoinGuide1, CoinGuide2, CoinGuide3));
+		var entry = new QAEntry(id, Remarks, Issues, new CoinGuides(CoinGuide1, CoinGuide2, CoinGuide3));
 
 		if (exists)
 			await _file.Overwrite(id, entry);
@@ -126,15 +77,15 @@ public partial class Form1ViewModel : ObservableObject
 	{
 		return ValidateId() &&
 			//remarks are ignored
-			(CoinGuide1.Any() || CoinGuide2.Any() || CoinGuide3.Any()
-			|| BadGameplay
-			|| Unreadable
-			|| Overdecorated
-			|| BadMusicSync
-			|| Memory
-			|| NoCoinIndication1 || NoCoinIndication2 || NoCoinIndication3
-			|| FreeCoin1 || FreeCoin2 || FreeCoin3
-			|| InsaneCoin1 || InsaneCoin2 || InsaneCoin3);
+			(CoinGuide1.Length != 0 || CoinGuide2.Length != 0 || CoinGuide3.Length != 0
+			|| Issues.BadGameplay
+			|| Issues.Unreadable
+			|| Issues.Overdecorated
+			|| Issues.BadMusicSync
+			|| Issues.Memory
+			|| Issues.NoCoin1Indication || Issues.NoCoin2Indication || Issues.NoCoin3Indication
+			|| Issues.FreeCoin1 || Issues.FreeCoin2 || Issues.FreeCoin3
+			|| Issues.InsaneCoin1 || Issues.InsaneCoin2 || Issues.InsaneCoin3);
 	}
 
 	[RelayCommand(CanExecute = nameof(CanSaveWithIssues))]

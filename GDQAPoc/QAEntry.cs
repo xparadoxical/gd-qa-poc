@@ -2,9 +2,9 @@
 
 namespace GDQAPoc;
 
-public sealed record QAEntry(uint Level, string Remarks, Issue[] Issues, CoinGuides Coins)
+public sealed record QAEntry(uint Level, string Remarks, IssueCollection Issues, CoinGuides Coins)
 {
-	public override string ToString() => $"| {Level} | {string.Join(", ", (object?[])Issues)} | {Remarks} | {Coins} |";
+	public override string ToString() => $"| {Level} | {string.Join(", ", Issues.Enumerate())} | {Remarks} | {Coins} |";
 }
 
 public record struct CoinGuides(string? Coin1, string? Coin2, string? Coin3)
