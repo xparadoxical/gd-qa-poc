@@ -1,4 +1,6 @@
-﻿namespace GDQAPoc;
+﻿using System.Buffers;
+
+namespace GDQAPoc;
 public static class StreamReaderExtensions
 {
 	public static Task<bool> SkipUntil(this StreamReader reader, char c)
@@ -35,8 +37,9 @@ public static class StreamReaderExtensions
 
 	private static async IAsyncEnumerable<ArraySegment<char>> ReadUntilCore(StreamReader reader, string s)
 	{
-		var arr = new char[4096];
-		var memory = arr.AsMemory();
+		const int bufLength = 4096;
+		var arr = ArrayPool<char>.Shared.Rent(bufLength);
+		var memory = arr.AsMemory(0, bufLength);
 
 		int correct = 0;
 
@@ -44,7 +47,7 @@ public static class StreamReaderExtensions
 		{
 			var read = await reader.ReadAsync(memory);
 			if (read == 0)
-				yield break;
+				goto stop;
 
 			for (int i = 0; i < arr.Length; i++)
 			{
@@ -62,11 +65,15 @@ public static class StreamReaderExtensions
 					// 0                 ^i
 					//                    ^Position -= read - i - 1
 					reader.BaseStream.Seek(-(read - i - 1), SeekOrigin.Current);
-					yield break;
+					goto stop;
 				}
 			}
 
 			yield return new(arr);
 		}
+
+	stop:
+		ArrayPool<char>.Shared.Return(arr);
+		yield break;
 	}
 }
