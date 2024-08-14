@@ -56,14 +56,14 @@ public sealed class QAFile(string path)
 		return await reader.SkipUntil($"| {level} |");
 	}
 
-	public async Task Overwrite(uint level, QAEntry entry)
+	public async Task Overwrite(QAEntry entry)
 	{
 		var handle = File.OpenHandle(path, access: FileAccess.ReadWrite, options: FileOptions.Asynchronous);
 		using var stream = new FileStream(handle, FileAccess.Read);
 
 		var reader = new StreamReader(stream, leaveOpen: true);
 
-		var toFind = $"| {level} |";
+		var toFind = $"| {entry.Level} |";
 		await reader.SkipUntil(toFind);
 		var entryPos = stream.Position - toFind.Length;
 
@@ -118,7 +118,7 @@ public sealed class QAFile(string path)
 		}
 	}
 
-	public async Task Append(uint level, QAEntry entry)
+	public async Task Append(QAEntry entry)
 	{
 		var stream = File.Open(path, new FileStreamOptions() { Access = FileAccess.Write, Options = FileOptions.WriteThrough | FileOptions.Asynchronous });
 		using var writer = new StreamWriter(stream);

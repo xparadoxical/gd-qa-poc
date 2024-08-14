@@ -51,9 +51,9 @@ public partial class Form1ViewModel : ObservableObject
 		var entry = new QAEntry(id, Remarks, Issues, new CoinGuides(CoinGuide1, CoinGuide2, CoinGuide3));
 
 		if (exists)
-			await _file.Overwrite(id, entry);
+			await _file.Overwrite(entry);
 		else
-			await _file.Append(id, entry);
+			await _file.Append(entry);
 	}
 
 	private bool ValidateId() => uint.TryParse(Id, out _);
