@@ -6,37 +6,37 @@ public sealed class IssueCollection// : IEnumerable<Issue>
 	public bool BadGameplay { get; set; }
 
 	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool Unreadable;
+	public bool Unreadable { get; set; }
 
 	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool Overdecorated;
+	public bool Overdecorated { get; set; }
 
 	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool BadMusicSync;
+	public bool BadMusicSync { get; set; }
 
 	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool Memory;
+	public bool Memory { get; set; }
 
 	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool NoCoin1Indication;
+	public bool NoCoin1Indication { get; set; }
 	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool NoCoin2Indication;
+	public bool NoCoin2Indication { get; set; }
 	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool NoCoin3Indication;
+	public bool NoCoin3Indication { get; set; }
 
 	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool FreeCoin1;
+	public bool FreeCoin1 { get; set; }
 	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool FreeCoin2;
+	public bool FreeCoin2 { get; set; }
 	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool FreeCoin3;
+	public bool FreeCoin3 { get; set; }
 
 	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool InsaneCoin1;
+	public bool InsaneCoin1 { get; set; }
 	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool InsaneCoin2;
+	public bool InsaneCoin2 { get; set; }
 	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool InsaneCoin3;
+	public bool InsaneCoin3 { get; set; }
 
 	public IEnumerable<Issue> Enumerate()
 	{
