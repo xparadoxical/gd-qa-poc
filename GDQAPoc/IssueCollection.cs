@@ -87,5 +87,19 @@ public sealed class IssueCollection// : IEnumerable<Issue>
 			yield return new Issue.InsaneCoins(InsaneCoin1, InsaneCoin2, InsaneCoin3);
 	}
 
-	//IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+	public bool IsEmpty =>
+		!(BadGameplay
+			|| Unreadable
+			|| Overdecorated
+			|| BadMusicSync
+			|| Memory
+			|| NoCoin1Indication
+			|| NoCoin2Indication
+			|| NoCoin3Indication
+			|| FreeCoin1
+			|| FreeCoin2
+			|| FreeCoin3
+			|| InsaneCoin1
+			|| InsaneCoin2
+			|| InsaneCoin3);
 }
