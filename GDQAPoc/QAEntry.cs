@@ -33,8 +33,8 @@ public record struct CoinGuides(string? Coin1, string? Coin2, string? Coin3)
 		=> string.Join("; ",
 			new string?[]
 			{
-				Coin1 is not null ? $"c1: {Coin1}" : null,
-				Coin2 is not null ? $"c1: {Coin2}" : null,
-				Coin3 is not null ? $"c1: {Coin3}" : null
+				string.IsNullOrEmpty(Coin1) ? null : $"c1: {Coin1}",
+				string.IsNullOrEmpty(Coin2) ? null : $"c2: {Coin2}",
+				string.IsNullOrEmpty(Coin3) ? null : $"c3: {Coin3}"
 			}.WhereNotNull());
 }
