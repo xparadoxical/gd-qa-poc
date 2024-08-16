@@ -22,7 +22,7 @@ public partial class Form1ViewModel : ObservableObject
 	[ObservableProperty]
 	private bool _exists;
 
-	private readonly QAFile _file = new(Environment.GetEnvironmentVariable("USERPROFILE") + @"\Documents\gd qa.md");
+	private readonly QAFile _file = new(JsonConfigProvider.Read().FilePath);
 
 	//async partial void OnIdChanged(string value)
 	//{
