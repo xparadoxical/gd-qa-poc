@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Globalization;
+
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace GDQAPoc;
@@ -56,7 +58,11 @@ public partial class Form1ViewModel : ObservableObject
 			await _file.Append(entry);
 	}
 
-	private bool ValidateId() => uint.TryParse(Id, out _);
+	[ObservableProperty]
+	private bool _isIdValid;
+
+	private bool ValidateId()
+		=> IsIdValid = uint.TryParse(Id, NumberStyles.None, null, out var id) && id > 0;
 
 	[RelayCommand(CanExecute = nameof(ValidateId))]
 	public async Task SaveNoIssues()
