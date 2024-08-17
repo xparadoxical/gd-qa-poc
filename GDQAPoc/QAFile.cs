@@ -1,4 +1,5 @@
 ﻿using System.Buffers;
+using System.Text;
 
 using CommunityToolkit.HighPerformance;
 
@@ -60,17 +61,16 @@ public sealed class QAFile(string path)
 	{
 		var handle = File.OpenHandle(path, access: FileAccess.ReadWrite, options: FileOptions.Asynchronous);
 		using var stream = new FileStream(handle, FileAccess.Read);
-
-		var reader = new StreamReader(stream, leaveOpen: true);
+		var reader = new StreamReader(stream, Encoding.UTF8, leaveOpen: true);
 
 		var toFind = $"| {entry.Level} |";
 		await reader.SkipUntil(toFind);
-		var entryPos = stream.Position - toFind.Length;
+		var entryPos = reader.GetPosition() - toFind.Length;
 
 		await reader.SkipUntil(Environment.NewLine);
-		var oldLength = stream.Position - Environment.NewLine.Length - entryPos;
+		var oldLength = reader.GetPosition() - entryPos;
 
-		var newEntry = entry.ToString() + Environment.NewLine;
+		var newEntry = Encoding.UTF8.GetBytes(entry.ToString() + Environment.NewLine);
 		var diff = newEntry.Length - oldLength;
 
 		var fileLength = RandomAccess.GetLength(handle);

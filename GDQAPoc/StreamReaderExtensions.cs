@@ -1,8 +1,26 @@
 ﻿using System.Buffers;
+using System.Runtime.CompilerServices;
 
 namespace GDQAPoc;
 public static class StreamReaderExtensions
 {
+	//https://stackoverflow.com/a/59442732/6416482
+	public static long GetPosition(this StreamReader reader)
+	{
+		var buffer = GetCharBuffer(reader);
+		var charPos = GetCharPos(reader);
+		var charLen = GetCharLen(reader);
+
+		return reader.BaseStream.Position - reader.CurrentEncoding.GetByteCount(buffer, charPos, charLen - charPos);
+
+		[UnsafeAccessor(UnsafeAccessorKind.Field, Name = "_charBuffer")]
+		static extern ref char[] GetCharBuffer(StreamReader sr);
+		[UnsafeAccessor(UnsafeAccessorKind.Field, Name = "_charPos")]
+		static extern ref int GetCharPos(StreamReader sr);
+		[UnsafeAccessor(UnsafeAccessorKind.Field, Name = "_charLen")]
+		static extern ref int GetCharLen(StreamReader sr);
+	}
+
 	public static Task<bool> SkipUntil(this StreamReader reader, char c)
 		=> SkipUntil(reader, c.ToString());
 
