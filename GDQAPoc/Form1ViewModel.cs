@@ -46,7 +46,7 @@ public partial class Form1ViewModel : ObservableObject
 			if (MessageBox.Show($"Overwrite {id}?",
 					"Confirm overwrite",
 					MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
-				is not DialogResult.OK)
+				is not DialogResult.Yes)
 				return;
 		}
 
