@@ -70,7 +70,7 @@ public sealed class QAFile(string path)
 		await reader.SkipUntil(Environment.NewLine);
 		var oldLength = stream.Position - Environment.NewLine.Length - entryPos;
 
-		var newEntry = entry.ToString();
+		var newEntry = entry.ToString() + Environment.NewLine;
 		var diff = newEntry.Length - oldLength;
 
 		var fileLength = RandomAccess.GetLength(handle);
@@ -124,6 +124,6 @@ public sealed class QAFile(string path)
 		using var writer = new StreamWriter(stream);
 		stream.Seek(0, SeekOrigin.End);
 
-		await writer.WriteAsync(entry.ToString());
+		await writer.WriteAsync(entry.ToString() + Environment.NewLine);
 	}
 }
