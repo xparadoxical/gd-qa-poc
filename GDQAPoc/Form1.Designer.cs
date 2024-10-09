@@ -44,6 +44,7 @@ partial class Form1
 		checkBox10 = new CheckBox();
 		panel2 = new Panel();
 		splitContainer1 = new SplitContainer();
+		loadButton = new Button();
 		panel3 = new Panel();
 		checkBox23 = new CheckBox();
 		checkBox18 = new CheckBox();
@@ -223,6 +224,7 @@ partial class Form1
 		// 
 		// splitContainer1.Panel1
 		// 
+		splitContainer1.Panel1.Controls.Add(loadButton);
 		splitContainer1.Panel1.Controls.Add(textBox1);
 		splitContainer1.Panel1.Controls.Add(button1);
 		splitContainer1.Panel1.Controls.Add(textBox5);
@@ -236,6 +238,15 @@ partial class Form1
 		splitContainer1.Size = new Size(296, 385);
 		splitContainer1.SplitterDistance = 72;
 		splitContainer1.TabIndex = 8;
+		// 
+		// loadButton
+		// 
+		loadButton.BackgroundImageLayout = ImageLayout.Stretch;
+		loadButton.Location = new Point(137, 3);
+		loadButton.Name = "loadButton";
+		loadButton.Size = new Size(29, 29);
+		loadButton.TabIndex = 5;
+		loadButton.UseVisualStyleBackColor = true;
 		// 
 		// panel3
 		// 
@@ -459,4 +470,5 @@ partial class Form1
 	private CheckBox checkBox16;
 	private CheckBox checkBox15;
 	private BindingSource form1ViewModelBindingSource;
+	private Button loadButton;
 }
