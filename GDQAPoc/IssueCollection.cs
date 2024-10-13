@@ -1,6 +1,8 @@
-﻿namespace GDQAPoc;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-public sealed class IssueCollection// : IEnumerable<Issue>
+namespace GDQAPoc;
+
+public sealed partial class IssueCollection : ObservableObject
 {
 	public IssueCollection() { }
 
@@ -36,41 +38,41 @@ public sealed class IssueCollection// : IEnumerable<Issue>
 		}
 	}
 
-	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool BadGameplay { get; set; }
+	[ObservableProperty]
+	public bool _badGameplay;
 
-	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool Unreadable { get; set; }
+	[ObservableProperty]
+	public bool _unreadable;
 
-	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool Overdecorated { get; set; }
+	[ObservableProperty]
+	public bool _overdecorated;
 
-	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool BadMusicSync { get; set; }
+	[ObservableProperty]
+	public bool _badMusicSync;
 
-	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool Memory { get; set; }
+	[ObservableProperty]
+	public bool _memory;
 
-	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool NoCoin1Indication { get; set; }
-	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool NoCoin2Indication { get; set; }
-	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool NoCoin3Indication { get; set; }
+	[ObservableProperty]
+	public bool _noCoin1Indication;
+	[ObservableProperty]
+	public bool _noCoin2Indication;
+	[ObservableProperty]
+	public bool _noCoin3Indication;
 
-	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool FreeCoin1 { get; set; }
-	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool FreeCoin2 { get; set; }
-	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool FreeCoin3 { get; set; }
+	[ObservableProperty]
+	public bool _freeCoin1;
+	[ObservableProperty]
+	public bool _freeCoin2;
+	[ObservableProperty]
+	public bool _freeCoin3;
 
-	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool InsaneCoin1 { get; set; }
-	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool InsaneCoin2 { get; set; }
-	//[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
-	public bool InsaneCoin3 { get; set; }
+	[ObservableProperty]
+	public bool _insaneCoin1;
+	[ObservableProperty]
+	public bool _insaneCoin2;
+	[ObservableProperty]
+	public bool _insaneCoin3;
 
 	public IEnumerable<Issue> Enumerate()
 	{

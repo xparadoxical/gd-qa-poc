@@ -12,7 +12,7 @@ public partial class Form1ViewModel : ObservableObject
 	[ObservableProperty]
 	private string _remarks = "";
 
-	public IssueCollection Issues { get; set; } = new();
+	public IssueCollection Issues { get; set; }
 
 	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
 	private string _coinGuide1 = "";
@@ -25,6 +25,12 @@ public partial class Form1ViewModel : ObservableObject
 	private bool _exists;
 
 	private readonly QAFile _file = new(JsonConfigProvider.Read().FilePath);
+
+	public Form1ViewModel()
+	{
+		Issues = new();
+		Issues.PropertyChanged += (sender, args) => SaveWithIssuesCommand.NotifyCanExecuteChanged();
+	}
 
 	//async partial void OnIdChanged(string value)
 	//{
