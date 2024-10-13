@@ -89,15 +89,7 @@ public partial class Form1ViewModel : ObservableObject
 	{
 		return ValidateId() &&
 			//remarks are ignored
-			(CoinGuide1.Length != 0 || CoinGuide2.Length != 0 || CoinGuide3.Length != 0
-			|| Issues.BadGameplay
-			|| Issues.Unreadable
-			|| Issues.Overdecorated
-			|| Issues.BadMusicSync
-			|| Issues.Memory
-			|| Issues.NoCoin1Indication || Issues.NoCoin2Indication || Issues.NoCoin3Indication
-			|| Issues.FreeCoin1 || Issues.FreeCoin2 || Issues.FreeCoin3
-			|| Issues.InsaneCoin1 || Issues.InsaneCoin2 || Issues.InsaneCoin3);
+			(CoinGuide1.Length != 0 || CoinGuide2.Length != 0 || CoinGuide3.Length != 0 || !Issues.IsEmpty);
 	}
 
 	[RelayCommand(CanExecute = nameof(CanSaveWithIssues))]
