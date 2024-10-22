@@ -1,7 +1,10 @@
 ﻿using System.Globalization;
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+
+using Microsoft.Extensions.Options;
 
 namespace GDQAPoc;
 public partial class Form1ViewModel : ObservableObject
@@ -24,7 +27,7 @@ public partial class Form1ViewModel : ObservableObject
 	[ObservableProperty]
 	private bool _exists;
 
-	private readonly QAFile _file = new(JsonConfigProvider.Read().FilePath);
+	private readonly QAFile _file = new(Ioc.Default.GetRequiredService<IOptionsMonitor<Config>>().CurrentValue.FilePath);//todo use a service
 
 	public Form1ViewModel()
 	{

@@ -1,3 +1,14 @@
-﻿namespace GDQAPoc;
+﻿using System.ComponentModel.DataAnnotations;
 
-public sealed record Config(string FilePath);
+using Microsoft.Extensions.Options;
+
+namespace GDQAPoc;
+
+public sealed class Config
+{
+	[Required]
+	public required string FilePath { get; set; }
+}
+
+[OptionsValidator]
+public partial class ConfigValidator : IValidateOptions<Config>;
