@@ -2,6 +2,8 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 
 using ConfigurationSubstitution;
 
+using GDQAPoc.Data;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -35,10 +37,11 @@ internal static class Program
 		settings.Configuration.AddJsonFile("config.json", false, true);
 		settings.Configuration.EnableSubstitutions("%", "%", UnresolvedVariableBehaviour.Throw);
 
-		var appBuilder = Host.CreateEmptyApplicationBuilder(settings);
-		appBuilder.Services.AddOptionsWithValidateOnStart<Config>()
+		var app = Host.CreateEmptyApplicationBuilder(settings);
+		app.Services.AddOptionsWithValidateOnStart<Config>()
 			.BindConfiguration("");
+		app.Services.AddSingleton<IQAEntryRepository, QAFile>();
 
-		return appBuilder.Build().Services;
+		return app.Build().Services;
 	}
 }

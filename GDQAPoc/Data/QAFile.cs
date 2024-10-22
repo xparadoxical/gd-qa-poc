@@ -3,13 +3,15 @@ using System.Text;
 
 using CommunityToolkit.HighPerformance;
 
-namespace GDQAPoc;
+using Microsoft.Extensions.Options;
 
-public sealed class QAFile(string path)
+namespace GDQAPoc.Data;
+
+public sealed class QAFile(IOptionsMonitor<Config> config) : IQAEntryRepository
 {
 	public async Task<QAEntry?> TryRead(uint level)
 	{
-		var stream = File.Open(path, new FileStreamOptions() { Options = FileOptions.SequentialScan | FileOptions.Asynchronous });
+		var stream = File.Open(config.CurrentValue.FilePath, new FileStreamOptions() { Options = FileOptions.SequentialScan | FileOptions.Asynchronous });
 		using var reader = new StreamReader(stream);
 
 		//find id
@@ -51,7 +53,7 @@ public sealed class QAFile(string path)
 
 	public async Task<bool> Exists(uint level)
 	{
-		var stream = File.Open(path, new FileStreamOptions() { Options = FileOptions.SequentialScan | FileOptions.Asynchronous });
+		var stream = File.Open(config.CurrentValue.FilePath, new FileStreamOptions() { Options = FileOptions.SequentialScan | FileOptions.Asynchronous });
 		using var reader = new StreamReader(stream);
 
 		return await reader.SkipUntil($"| {level} |");
@@ -59,7 +61,7 @@ public sealed class QAFile(string path)
 
 	public async Task Overwrite(QAEntry entry)
 	{
-		var handle = File.OpenHandle(path, access: FileAccess.ReadWrite, options: FileOptions.Asynchronous);
+		var handle = File.OpenHandle(config.CurrentValue.FilePath, access: FileAccess.ReadWrite, options: FileOptions.Asynchronous);
 		using var stream = new FileStream(handle, FileAccess.Read);
 		var reader = new StreamReader(stream, Encoding.UTF8, leaveOpen: true);
 
@@ -118,9 +120,9 @@ public sealed class QAFile(string path)
 		}
 	}
 
-	public async Task Append(QAEntry entry)
+	public async Task Add(QAEntry entry)
 	{
-		var stream = File.Open(path, new FileStreamOptions() { Access = FileAccess.Write, Options = FileOptions.WriteThrough | FileOptions.Asynchronous });
+		var stream = File.Open(config.CurrentValue.FilePath, new FileStreamOptions() { Access = FileAccess.Write, Options = FileOptions.WriteThrough | FileOptions.Asynchronous });
 		using var writer = new StreamWriter(stream);
 		stream.Seek(0, SeekOrigin.End);
 

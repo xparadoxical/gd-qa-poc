@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 
-using Microsoft.Extensions.Options;
+using GDQAPoc.Data;
 
 namespace GDQAPoc;
 public partial class Form1ViewModel : ObservableObject
@@ -27,7 +27,7 @@ public partial class Form1ViewModel : ObservableObject
 	[ObservableProperty]
 	private bool _exists;
 
-	private readonly QAFile _file = new(Ioc.Default.GetRequiredService<IOptionsMonitor<Config>>().CurrentValue.FilePath);//todo use a service
+	private readonly IQAEntryRepository _qa = Ioc.Default.GetRequiredService<IQAEntryRepository>();
 
 	public Form1ViewModel()
 	{
@@ -48,7 +48,7 @@ public partial class Form1ViewModel : ObservableObject
 	public async Task Save(bool all)
 	{
 		var id = uint.Parse(Id);
-		var exists = await _file.Exists(id);
+		var exists = await _qa.Exists(id);
 
 		if (exists)
 		{
@@ -62,9 +62,9 @@ public partial class Form1ViewModel : ObservableObject
 		var entry = new QAEntry(id, Remarks, Issues, new CoinGuides(CoinGuide1, CoinGuide2, CoinGuide3));
 
 		if (exists)
-			await _file.Overwrite(entry);
+			await _qa.Overwrite(entry);
 		else
-			await _file.Append(entry);
+			await _qa.Add(entry);
 	}
 
 	[ObservableProperty]
