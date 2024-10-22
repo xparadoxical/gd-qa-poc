@@ -32,7 +32,7 @@ public partial class Form1ViewModel : ObservableObject
 	public Form1ViewModel()
 	{
 		Issues = new();
-		Issues.PropertyChanged += (sender, args) => SaveWithIssuesCommand.NotifyCanExecuteChanged();
+		Issues.PropertyChanged += (_, _) => SaveWithIssuesCommand.NotifyCanExecuteChanged();
 	}
 
 	//async partial void OnIdChanged(string value)
