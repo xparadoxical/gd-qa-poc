@@ -9,7 +9,7 @@ using GDQAPoc.Data;
 namespace GDQAPoc;
 public partial class Form1ViewModel : ObservableObject
 {
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveNoIssues) + "Command", nameof(SaveWithIssues) + "Command")]
+	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveNoIssuesCommand), nameof(SaveWithIssuesCommand))]
 	private string _id = "";
 
 	[ObservableProperty]
@@ -17,11 +17,11 @@ public partial class Form1ViewModel : ObservableObject
 
 	public IssueCollection Issues { get; set; }
 
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
+	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssuesCommand))]
 	private string _coinGuide1 = "";
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
+	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssuesCommand))]
 	private string _coinGuide2 = "";
-	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssues) + "Command")]
+	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssuesCommand))]
 	private string _coinGuide3 = "";
 
 	[ObservableProperty]
