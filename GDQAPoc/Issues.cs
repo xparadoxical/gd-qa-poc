@@ -33,6 +33,8 @@ public record Issue(string Tag)
 		};
 	}
 
+	public sealed override string ToString() => Tag;
+
 	public sealed record BadGameplay() : Issue("bgp");
 	public sealed record Unreadable() : Issue("unrd");
 	public sealed record Overdecorated() : Issue("ovdeco");
