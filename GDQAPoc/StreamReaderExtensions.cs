@@ -21,10 +21,10 @@ public static class StreamReaderExtensions
 		static extern ref int GetCharLen(StreamReader sr);
 	}
 
-	public static Task<bool> SkipUntil(this StreamReader reader, char c)
-		=> SkipUntil(reader, c.ToString());
+	public static Task<bool> SkipUntil(this StreamReader reader, char c, CancellationToken ct = default)
+		=> SkipUntil(reader, c.ToString(), ct);
 
-	public static async Task<bool> SkipUntil(this StreamReader reader, string s)
+	public static async Task<bool> SkipUntil(this StreamReader reader, string s, CancellationToken ct = default)
 	{
 		var arr = new char[1];
 		var memory = arr.AsMemory();
@@ -33,7 +33,7 @@ public static class StreamReaderExtensions
 
 		while (true)
 		{
-			var read = await reader.ReadAsync(memory);
+			var read = await reader.ReadAsync(memory, ct);
 			if (read == 0)
 				return false;
 
@@ -47,13 +47,13 @@ public static class StreamReaderExtensions
 		}
 	}
 
-	public static IAsyncEnumerable<char> ReadUntil(this StreamReader reader, char c)
-		=> ReadUntil(reader, c.ToString());
+	public static IAsyncEnumerable<char> ReadUntil(this StreamReader reader, char c, CancellationToken ct = default)
+		=> ReadUntil(reader, c.ToString(), ct);
 
-	public static IAsyncEnumerable<char> ReadUntil(this StreamReader reader, string s)
-		=> ReadUntilCore(reader, s).SelectMany(segm => segm.ToArray().ToAsyncEnumerable());
+	public static IAsyncEnumerable<char> ReadUntil(this StreamReader reader, string s, CancellationToken ct = default)
+		=> ReadUntilCore(reader, s, ct).SelectMany(segm => segm.ToArray().ToAsyncEnumerable());
 
-	private static async IAsyncEnumerable<ArraySegment<char>> ReadUntilCore(StreamReader reader, string s)
+	private static async IAsyncEnumerable<ArraySegment<char>> ReadUntilCore(StreamReader reader, string s, [EnumeratorCancellation] CancellationToken ct = default)
 	{
 		const int bufLength = 4096;
 		var arr = ArrayPool<char>.Shared.Rent(bufLength);
@@ -61,33 +61,40 @@ public static class StreamReaderExtensions
 
 		int correct = 0;
 
-		while (true)
+		try
 		{
-			var read = await reader.ReadAsync(memory);
-			if (read == 0)
-				goto stop;
-
-			for (int i = 0; i < arr.Length; i++)
+			while (true)
 			{
-				if (arr[i] == s[correct])
-					correct++;
-				else
-					correct = 0;
-
-				if (correct == s.Length)
-				{
-					yield return new(arr, 0, i + 1);
-
-					// abcdefghijlmnoPQRSTuvwxyz
-					// 0                        ^read (Position)
-					// 0                 ^i
-					//                    ^Position -= read - i - 1
-					reader.BaseStream.Seek(-(read - i - 1), SeekOrigin.Current);
+				var read = await reader.ReadAsync(memory, ct);
+				if (read == 0)
 					goto stop;
-				}
-			}
 
-			yield return new(arr);
+				for (int i = 0; i < arr.Length; i++)
+				{
+					if (arr[i] == s[correct])
+						correct++;
+					else
+						correct = 0;
+
+					if (correct == s.Length)
+					{
+						yield return new(arr, 0, i + 1);
+
+						// abcdefghijlmnoPQRSTuvwxyz
+						// 0                        ^read (Position)
+						// 0                 ^i
+						//                    ^Position -= read - i - 1
+						reader.BaseStream.Seek(-(read - i - 1), SeekOrigin.Current);
+						goto stop;
+					}
+				}
+
+				yield return new(arr);
+			}
+		}
+		finally
+		{
+			ArrayPool<char>.Shared.Return(arr);
 		}
 
 	stop:
