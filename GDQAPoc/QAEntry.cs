@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-﻿using CommunityToolkit.HighPerformance;
+using CommunityToolkit.HighPerformance;
 
 namespace GDQAPoc;
 
