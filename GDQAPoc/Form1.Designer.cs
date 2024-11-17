@@ -249,6 +249,7 @@ partial class Form1
 		loadButton.Size = new Size(29, 29);
 		loadButton.TabIndex = 5;
 		loadButton.UseVisualStyleBackColor = true;
+		loadButton.EnabledChanged += loadButton_EnabledChanged;
 		// 
 		// panel3
 		// 
