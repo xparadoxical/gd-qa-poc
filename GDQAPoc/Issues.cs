@@ -7,7 +7,7 @@ public record Issue(string Tag)
 	public static Issue Parse(ReadOnlySpan<char> input)
 	{
 		var space = input.IndexOf(' ');
-		var tag = input[..space];
+		var tag = space >= 0 ? input[..space] : input;
 
 		var simpleIssue = tag switch
 		{
