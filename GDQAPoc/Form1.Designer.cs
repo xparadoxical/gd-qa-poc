@@ -242,6 +242,8 @@ partial class Form1
 		// loadButton
 		// 
 		loadButton.BackgroundImageLayout = ImageLayout.Stretch;
+		loadButton.DataBindings.Add(new Binding("Command", form1ViewModelBindingSource, "LoadExistingEntryCommand", true));
+		loadButton.DataBindings.Add(new Binding("Enabled", form1ViewModelBindingSource, "EntryExists", true, DataSourceUpdateMode.OnPropertyChanged));
 		loadButton.Location = new Point(137, 3);
 		loadButton.Name = "loadButton";
 		loadButton.Size = new Size(29, 29);

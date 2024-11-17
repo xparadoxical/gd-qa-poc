@@ -1,13 +1,13 @@
-﻿using System.Globalization;
-
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 using GDQAPoc.Data;
+using GDQAPoc.Data.Searching;
 
 namespace GDQAPoc;
-public partial class Form1ViewModel : ObservableObject
+public partial class Form1ViewModel : ObservableObject, IRecipient<EntryFoundMessage>
 {
 	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveNoIssuesCommand), nameof(SaveWithIssuesCommand))]
 	private string _id = "";
@@ -24,15 +24,14 @@ public partial class Form1ViewModel : ObservableObject
 	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssuesCommand))]
 	private string _coinGuide3 = "";
 
-	[ObservableProperty]
-	private bool _exists;
-
 	private readonly IQAEntryRepository _qa = Ioc.Default.GetRequiredService<IQAEntryRepository>();
 
 	public Form1ViewModel()
 	{
 		Issues = new();
 		Issues.PropertyChanged += (_, _) => SaveWithIssuesCommand.NotifyCanExecuteChanged();
+		WeakReferenceMessenger.Default.Register(this);
+		Ioc.Default.GetRequiredService<DebouncedEntryFinder>(); //ensure initialized
 	}
 
 	//async partial void OnIdChanged(string value)
@@ -65,6 +64,8 @@ public partial class Form1ViewModel : ObservableObject
 			await _qa.Overwrite(entry);
 		else
 			await _qa.Add(entry);
+
+		WeakReferenceMessenger.Default.Send<DataSavedMessage>();
 	}
 
 	[ObservableProperty]
@@ -97,4 +98,30 @@ public partial class Form1ViewModel : ObservableObject
 
 	[RelayCommand(CanExecute = nameof(CanSaveWithIssues))]
 	public async Task SaveWithIssues() => await Save(true);
+
+	partial void OnIdChanged(string value)
+	{
+		EntryExists = false;
+		_entry = null;
+		WeakReferenceMessenger.Default.Send(new IdChangedMessage(value));
+	}
+
+	[ObservableProperty]
+	private bool _entryExists;
+
+	private QAEntry? _entry;
+
+	public void Receive(EntryFoundMessage message)
+	{
+		EntryExists = true;
+		_entry = message.Entry;
+	}
+
+	[RelayCommand]
+	public void LoadExistingEntry()
+	{
+		Issues = _entry!.Issues;
+		(CoinGuide1, CoinGuide2, CoinGuide3) = _entry.Coins;
+		Remarks = _entry.Remarks;
+	}
 }

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using ConfigurationSubstitution;
 
 using GDQAPoc.Data;
+using GDQAPoc.Data.Searching;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,6 +42,7 @@ internal static class Program
 		app.Services.AddOptionsWithValidateOnStart<Config>()
 			.BindConfiguration("");
 		app.Services.AddSingleton<IQAEntryRepository, QAFile>();
+		app.Services.AddSingleton<DebouncedEntryFinder>();
 
 		return app.Build().Services;
 	}
