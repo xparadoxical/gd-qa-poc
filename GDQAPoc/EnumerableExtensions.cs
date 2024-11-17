@@ -5,5 +5,5 @@ public static class EnumerableExtensions
 		=> e.Where(x => x is not null).Select(x => x!);
 
 	public static T? FirstOfTypeOrDefault<T>(this System.Collections.IEnumerable e)
-		=> e.Cast<T>().FirstOrDefault();
+		=> e.OfType<T>().FirstOrDefault();
 }
