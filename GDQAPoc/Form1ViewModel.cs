@@ -86,7 +86,7 @@ public partial class Form1ViewModel : ObservableObject, IRecipient<EntryFoundMes
 			if (MessageBox.Show("Do you want to ignore your written issues?",
 					"Confirm ignore",
 					MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
-				is not DialogResult.OK)
+				is not DialogResult.Yes)
 				return;
 		}
 
