@@ -35,19 +35,19 @@ public sealed class QAFile(IOptionsMonitor<Config> config) : IQAEntryRepository
 			static ReadOnlySpan<char> ReadIssues(ReadOnlySpan<char> data, out Issue[] issues)
 			{
 				var separator = data.IndexOf('|');
-				var read = data[..separator];
+				var toRead = data[..separator];
 				var remaining = data[(separator + 1)..];
 
-				if (read.Contains('-'))
+				if (toRead.Contains('-'))
 				{
 					issues = [];
 					return remaining;
 				}
 
-				issues = new Issue[System.MemoryExtensions.Count(data, ',') + 1];
+				issues = new Issue[System.MemoryExtensions.Count(toRead, ',') + 1];
 
 				var i = 0;
-				foreach (var issueString in data.Tokenize(','))
+				foreach (var issueString in toRead.Tokenize(','))
 					issues[i++] = Issue.Parse(issueString.Trim(' '));
 
 				return remaining;
