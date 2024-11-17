@@ -8,11 +8,11 @@ public sealed record QAEntry(uint Level, string Remarks, IssueCollection Issues,
 		=> $"| {Level} | {(Issues.IsEmpty ? '-' : string.Join(", ", Issues.Enumerate()))} | {Remarks} | {Coins} |";
 }
 
-public record struct CoinGuides(string? Coin1, string? Coin2, string? Coin3)
+public record struct CoinGuides(string Coin1, string Coin2, string Coin3)
 {
 	public static CoinGuides Parse(ReadOnlySpan<char> input)
 	{
-		var ret = new CoinGuides(null, null, null);
+		var ret = new CoinGuides("", "", "");
 		foreach (var guide in input.Tokenize(';'))
 		{
 			var colon = guide.IndexOf(':');
