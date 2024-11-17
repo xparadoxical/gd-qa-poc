@@ -15,6 +15,9 @@ public record struct CoinGuides(string Coin1, string Coin2, string Coin3)
 		var ret = new CoinGuides("", "", "");
 		foreach (var guide in input.Tokenize(';'))
 		{
+			if (guide.IsEmpty)
+				continue;
+
 			var colon = guide.IndexOf(':');
 			var id = guide[..colon];
 			var text = new string(guide[(colon + 2)..]);
