@@ -71,7 +71,7 @@ public partial class Form1ViewModel : ObservableObject
 	private bool _isIdValid;
 
 	private bool ValidateId()
-		=> IsIdValid = uint.TryParse(Id, NumberStyles.None, null, out var id) && id > 0;
+		=> IsIdValid = QAEntry.TryParseId(Id, out _);
 
 	[RelayCommand(CanExecute = nameof(ValidateId))]
 	public async Task SaveNoIssues()

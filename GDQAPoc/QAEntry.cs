@@ -1,3 +1,5 @@
+﻿using System.Globalization;
+
 ﻿using CommunityToolkit.HighPerformance;
 
 namespace GDQAPoc;
@@ -6,6 +8,9 @@ public sealed record QAEntry(uint Level, string Remarks, IssueCollection Issues,
 {
 	public override string ToString()
 		=> $"| {Level} | {(Issues.IsEmpty ? '-' : string.Join(", ", Issues.Enumerate()))} | {Remarks} | {Coins} |";
+
+	internal static bool TryParseId(string input, out uint id)
+		=> uint.TryParse(input, NumberStyles.None, null, out id) && id > 0;
 }
 
 public record struct CoinGuides(string Coin1, string Coin2, string Coin3)
