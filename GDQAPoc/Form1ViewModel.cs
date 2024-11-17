@@ -15,7 +15,8 @@ public partial class Form1ViewModel : ObservableObject, IRecipient<EntryFoundMes
 	[ObservableProperty]
 	private string _remarks = "";
 
-	public IssueCollection Issues { get; set; }
+	[ObservableProperty]
+	private IssueCollection _issues;
 
 	[ObservableProperty, NotifyCanExecuteChangedFor(nameof(SaveWithIssuesCommand))]
 	private string _coinGuide1 = "";
@@ -66,6 +67,9 @@ public partial class Form1ViewModel : ObservableObject, IRecipient<EntryFoundMes
 			await _qa.Add(entry);
 
 		WeakReferenceMessenger.Default.Send<DataSavedMessage>();
+		Id = "";
+		Issues = new();
+		Remarks = CoinGuide1 = CoinGuide2 = CoinGuide3 = "";
 	}
 
 	[ObservableProperty]
