@@ -28,8 +28,8 @@ public sealed class QAFile(IOptionsMonitor<Config> config) : IQAEntryRepository
 		QAEntry SyncRest(ReadOnlySpan<char> data)
 		{
 			data = ReadIssues(data, out var issues);
-			var remarks = new string(data.ConsumeUntil('|'));
-			var coins = CoinGuides.Parse(data.ConsumeUntil('|'));
+			var remarks = new string(data.ConsumeUntil('|').Trim("| "));
+			var coins = CoinGuides.Parse(data.ConsumeUntil('|').Trim("| "));
 			return new(level, remarks, new(issues), coins);
 
 			static ReadOnlySpan<char> ReadIssues(ReadOnlySpan<char> data, out Issue[] issues)
