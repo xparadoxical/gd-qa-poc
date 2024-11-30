@@ -32,7 +32,7 @@ public sealed class DebouncedEntryFinder : IRecipient<IdChangedMessage>
 			{
 				if (await _repo.TryRead(id, ct) is not null and var entry)
 				{
-					WeakReferenceMessenger.Default.Send(new EntryFoundMessage(entry));//run this on ui thread :(
+					WeakReferenceMessenger.Default.Send(new EntryFoundMessage(entry));
 					return;
 				}
 
